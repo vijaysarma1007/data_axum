@@ -1,6 +1,6 @@
-mod hello_world;
-mod custom_json_extractor;
 mod create_task;
+mod custom_json_extractor;
+mod hello_world;
 
 use axum::{
     Extension, Router,
@@ -9,15 +9,15 @@ use axum::{
     routing::{get, post},
 };
 
-use hello_world::hello_world;
-use custom_json_extractor::custom_json_extractor;
-use sea_orm::{DatabaseConnection};
 use create_task::create_task;
+use custom_json_extractor::custom_json_extractor;
+use hello_world::hello_world;
+use sea_orm::DatabaseConnection;
 
 pub fn create_routes(database: DatabaseConnection) -> Router {
     Router::new()
-    .route("/", get(hello_world))
-    .route("/custom_json_extractor", post(custom_json_extractor))
-    .route("/tasks", post(create_task))
-    .layer(Extension(database))
+        .route("/", get(hello_world))
+        .route("/custom_json_extractor", post(custom_json_extractor))
+        .route("/tasks", post(create_task))
+        .layer(Extension(database))
 }

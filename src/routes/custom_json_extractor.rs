@@ -12,7 +12,7 @@ use validator::Validate;
 pub struct RequestUser {
     #[validate(email(message = "must be a valid email."))]
     pub username: String,
-    #[validate(length(min=8, message = "must have at least 8 characters!"))]
+    #[validate(length(min = 8, message = "must have at least 8 characters!"))]
     pub password: String,
 }
 
@@ -27,7 +27,7 @@ where
             .await
             .map_err(|error| (StatusCode::BAD_REQUEST, format!("{}", error)))?;
         println!("cusomt");
-        
+
         if let Err(erros) = user.validate() {
             return Err((StatusCode::BAD_REQUEST, format!("{}", erros)));
         }
