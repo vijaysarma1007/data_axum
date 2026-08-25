@@ -1,6 +1,8 @@
+use data_axum::run;
 use dotenvy::dotenv;
 use dotenvy_macro::dotenv;
-use data_axum::run;
+
+
 
 #[tokio::main]
 async fn main() {
