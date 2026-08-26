@@ -3,7 +3,7 @@ use std::{dbg, format, println};
 use axum::{
     Json,
     extract::{FromRequest, Request},
-    http::{self, StatusCode},
+    http::StatusCode,
 };
 use serde::Deserialize;
 use validator::Validate;
