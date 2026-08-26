@@ -44,7 +44,7 @@ pub async fn get_all_tasks(
     let mut priority_filter = Condition::all();
     if let Some(priority) = query_params.priority {
         priority_filter = if priority.is_empty() {
-                priority_filter.add(Column::Priority.is_null())
+            priority_filter.add(Column::Priority.is_null())
         } else {
             priority_filter.add(Column::Priority.eq(priority))
         }
