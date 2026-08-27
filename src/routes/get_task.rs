@@ -15,7 +15,7 @@ pub struct ResponseTask {
     priority: Option<String>,
     description: Option<String>,
     deleted_at: Option<DateTime<FixedOffset>>,
-    user_id: Option<i32>
+    user_id: Option<i32>,
 }
 
 pub async fn get_one_task(
@@ -58,7 +58,7 @@ pub async fn get_all_tasks(
             priority_filter.add(Column::Priority.eq(priority))
         }
     }
-    
+
     let all_tasks: Vec<ResponseTask> = Tasks::find()
         .filter(priority_filter)
         .filter(tasks::Column::DeletedAt.is_null())
@@ -72,7 +72,7 @@ pub async fn get_all_tasks(
             description: db_task.description,
             priority: db_task.priority,
             deleted_at: db_task.deleted_at,
-            user_id: db_task.user_id
+            user_id: db_task.user_id,
         })
         .collect();
 

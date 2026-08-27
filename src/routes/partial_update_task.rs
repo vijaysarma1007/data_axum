@@ -5,11 +5,11 @@ use sea_orm::{
     ActiveValue::Set, ColumnTrait, DatabaseConnection, entity::prelude::DateTimeWithTimeZone,
 };
 use sea_orm::{EntityTrait, IntoActiveModel, QueryFilter};
-use serde::{Deserialize, de};
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct RequestTask {
-    pub id: Option<i32>,
+    pub _id: Option<i32>,
     #[serde(
         default,
         skip_serializing_if = "Option::is_none",
@@ -35,8 +35,8 @@ pub struct RequestTask {
         with = "::serde_with::rust::double_option"
     )]
     pub deleted_at: Option<Option<DateTimeWithTimeZone>>,
-    pub user_id: Option<i32>,
-    pub is_default: Option<bool>,
+    pub _user_id: Option<i32>,
+    pub _is_default: Option<bool>,
 }
 
 pub async fn partial_update(

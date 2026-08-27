@@ -1,12 +1,10 @@
-use crate::database::tasks::{self, Entity as Tasks};
+use crate::database::tasks::Entity as Tasks;
 use axum::{
     Extension,
     extract::{Path, Query},
     http::StatusCode,
 };
-use sea_orm::{
-    ActiveValue::Set, ColumnTrait, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter,
-};
+use sea_orm::{ActiveValue::Set, DatabaseConnection, EntityTrait, IntoActiveModel};
 use serde::Deserialize;
 
 #[derive(Deserialize)]

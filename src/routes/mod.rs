@@ -20,7 +20,7 @@ use hello_world::hello_world;
 use partial_update_task::partial_update;
 use sea_orm::DatabaseConnection;
 use update_task::atomic_update;
-use users::{create_user, login};
+use users::{create_user, login, logout};
 
 pub fn create_routes(database: DatabaseConnection) -> Router {
     Router::new()
@@ -34,5 +34,6 @@ pub fn create_routes(database: DatabaseConnection) -> Router {
         .route("/tasks/{task_id}", delete(delete_task))
         .route("/users", post(create_user))
         .route("/users/login", post(login))
+        .route("/users/logout", post(logout))
         .layer(Extension(database))
 }
