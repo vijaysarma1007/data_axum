@@ -14,7 +14,7 @@ pub struct ResponseTask {
     title: String,
     priority: Option<String>,
     description: Option<String>,
-    deleted_at: Option<DateTime<FixedOffset>>
+    deleted_at: Option<DateTime<FixedOffset>>,
 }
 
 pub async fn get_one_task(
@@ -22,15 +22,17 @@ pub async fn get_one_task(
     Extension(database): Extension<DatabaseConnection>,
 ) -> Result<Json<ResponseTask>, StatusCode> {
     let task = Tasks::find_by_id(task_id)
-    .filter(tasks::Column::DeletedAt.is_null())
-    .one(&database).await.unwrap();
+        .filter(tasks::Column::DeletedAt.is_null())
+        .one(&database)
+        .await
+        .unwrap();
     if let Some(task) = task {
         Ok(Json(ResponseTask {
             id: task.id,
             title: task.title,
             description: task.description,
             priority: task.priority,
-            deleted_at: task.deleted_at
+            deleted_at: task.deleted_at,
         }))
     } else {
         Err(StatusCode::NOT_FOUND)
@@ -66,7 +68,7 @@ pub async fn get_all_tasks(
             title: db_task.title,
             description: db_task.description,
             priority: db_task.priority,
-            deleted_at: db_task.deleted_at
+            deleted_at: db_task.deleted_at,
         })
         .collect();
 
