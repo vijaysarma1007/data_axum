@@ -1,11 +1,11 @@
 mod create_task;
-mod create_user;
 mod custom_json_extractor;
 mod delete_task;
 mod get_task;
 mod hello_world;
 mod partial_update_task;
 mod update_task;
+mod users;
 
 use axum::{
     Extension, Router,
@@ -13,7 +13,6 @@ use axum::{
 };
 
 use create_task::create_task;
-use create_user::create_user;
 use custom_json_extractor::custom_json_extractor;
 use delete_task::delete_task;
 use get_task::{get_all_tasks, get_one_task};
@@ -21,6 +20,7 @@ use hello_world::hello_world;
 use partial_update_task::partial_update;
 use sea_orm::DatabaseConnection;
 use update_task::atomic_update;
+use users::{create_user, login};
 
 pub fn create_routes(database: DatabaseConnection) -> Router {
     Router::new()
@@ -33,5 +33,6 @@ pub fn create_routes(database: DatabaseConnection) -> Router {
         .route("/tasks/{task_id}", patch(partial_update))
         .route("/tasks/{task_id}", delete(delete_task))
         .route("/users", post(create_user))
+        .route("/users/login", post(login))
         .layer(Extension(database))
 }
