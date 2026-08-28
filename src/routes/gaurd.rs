@@ -1,4 +1,7 @@
-use crate::database::users::{self, Entity as Users};
+use crate::{
+    database::users::{self, Entity as Users},
+    utils::jwt::is_valid,
+};
 use axum::{extract::Request, http::StatusCode, middleware::Next, response::Response};
 use headers::{Authorization, HeaderMapExt, authorization::Bearer};
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
@@ -17,10 +20,14 @@ pub async fn gaurd(mut request: Request, next: Next) -> Result<Response, StatusC
         .ok_or(StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let user = Users::find()
-        .filter(users::Column::Token.eq(token))
+        .filter(users::Column::Token.eq(&token))
         .one(database)
         .await
         .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    //validating the token after the database query and user query will not give hacker a chance to guess due to timing attack
+
+    is_valid(&token)?;
 
     let Some(user) = user else {
         return Err(StatusCode::UNAUTHORIZED);

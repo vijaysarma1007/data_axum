@@ -27,8 +27,8 @@ use users::{create_user, login, logout};
 pub fn create_routes(database: DatabaseConnection) -> Router {
     Router::new()
         .route("/users/logout", post(logout))
-        .route_layer(middleware::from_fn(gaurd)) // routes above this layer must require authorization
         .route("/", get(hello_world))
+        .route_layer(middleware::from_fn(gaurd)) // routes above this layer must require authorization
         .route("/custom_json_extractor", post(custom_json_extractor))
         .route("/tasks", post(create_task))
         .route("/tasks", get(get_all_tasks))

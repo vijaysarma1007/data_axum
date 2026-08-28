@@ -16,3 +16,4 @@ headers = "0.4.1"
 serde_with = "3.22.0"
 chrono = { version = "0.4.45", features = ["serde"] }
 bcrypt = "0.19.3"
+jsonwebtoken = { version = "11.0.0", features = ["rust_crypto"] }

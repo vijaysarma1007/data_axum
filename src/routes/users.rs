@@ -1,5 +1,6 @@
 use crate::database::users::Entity as Users;
 use crate::database::users::{self, Model};
+use crate::utils::jwt::create_jwt;
 use axum::{Extension, Json, http::StatusCode};
 use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ColumnTrait, DatabaseConnection, EntityTrait,
@@ -24,10 +25,11 @@ pub async fn create_user(
     Extension(database): Extension<DatabaseConnection>,
     Json(request_user): Json<RequestUser>,
 ) -> Result<Json<ResponseUser>, StatusCode> {
+    let jwt = create_jwt()?;
     let new_user = users::ActiveModel {
         username: Set(request_user.username),
         password: Set(hash_password(request_user.password)?),
-        token: Set(Some("eyfldkfjsdlkfjsdlkfjlsdkjfsdf3wertj3tie".to_owned())),
+        token: Set(Some(jwt)),
         ..Default::default()
     }
     .save(&database)
@@ -56,7 +58,7 @@ pub async fn login(
             return Err(StatusCode::UNAUTHORIZED);
         }
 
-        let new_token = "1233wd4f45f67yy78u9i0o".to_owned();
+        let new_token = create_jwt()?;
         let mut user = db_user.into_active_model();
 
         user.token = Set(Some(new_token));
