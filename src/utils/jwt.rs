@@ -4,6 +4,8 @@ use dotenvy_macro::dotenv;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
 
+use crate::utils::app_error::AppError;
+
 #[derive(Serialize, Deserialize, Debug)]
 struct Claims {
     exp: usize,
@@ -26,7 +28,7 @@ pub fn create_jwt() -> Result<String, StatusCode> {
     Ok(token)
 }
 
-pub fn is_valid(token: &str) -> Result<bool, StatusCode> {
+pub fn is_valid(token: &str) -> Result<bool, AppError> {
     let secret = dotenv!("JWT_SECRET");
     let key = DecodingKey::from_secret(secret.as_bytes());
     decode::<Claims>(
@@ -35,8 +37,14 @@ pub fn is_valid(token: &str) -> Result<bool, StatusCode> {
         &Validation::new(jsonwebtoken::Algorithm::HS256),
     )
     .map_err(|error| match error.kind() {
-        jsonwebtoken::errors::ErrorKind::ExpiredSignature => StatusCode::UNAUTHORIZED,
-        _ => StatusCode::INTERNAL_SERVER_ERROR,
+        jsonwebtoken::errors::ErrorKind::ExpiredSignature => AppError::new(
+            StatusCode::UNAUTHORIZED,
+            "Your session is expired, please log in",
+        ),
+        _ => AppError::new(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Something went wrong, please try again!",
+        ),
     })?;
 
     Ok(true)
